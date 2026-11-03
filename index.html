@@ -4,11 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Фреймворк 4D</title>
+<meta name="author" content="Алексей Игнатенко">
+<meta name="copyright" content="© 2026 Алексей Игнатенко, методолог онлайн-обучения. Лицензия CC BY 4.0">
+<link rel="license" href="https://creativecommons.org/licenses/by/4.0/">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
 <style>
 /* Layout: game board on the left (canvas, hints, touch buttons), reading column on the right (collapsible task list, then rules); one column on phones. */
 :root{
-  --bg:#eef1ee; --panel:#fbfcfb; --ink:#18231f; --muted:#56655f; --line:#cdd7d1;
+  --bg:#eef1ee; --panel:#fbfcfb; --ink:#18231f; --muted:#56655f; --line:#cdd7d1; --faint:#8a9791;
   --field:#e2e9e4; --field2:#d9e2dc; --stone:#66726e; --stone-ink:#ffffff;
   --good:#3f8f2a; --good-hi:#8cc66a; --sick:#b9b940;
   --c-do:#1b6ca8; --c-delegate:#b8721d; --c-delete:#c0392f; --c-date:#0e8585;
@@ -17,7 +20,7 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#121a17; --panel:#1a2420; --ink:#e6eee9; --muted:#9fb0a8; --line:#2c3a34;
+    --bg:#121a17; --panel:#1a2420; --ink:#e6eee9; --muted:#9fb0a8; --line:#2c3a34; --faint:#6c7b74;
     --field:#1b2622; --field2:#202d28; --stone:#55645e; --stone-ink:#f0f6f2;
     --good:#8bd04f; --good-hi:#c9f09b; --sick:#c5c64a;
     --c-do:#5aa9e6; --c-delegate:#e0a04a; --c-delete:#ee6a5f; --c-date:#45c0b8;
@@ -25,7 +28,7 @@
   }
 }
 :root[data-theme="dark"]{
-  --bg:#121a17; --panel:#1a2420; --ink:#e6eee9; --muted:#9fb0a8; --line:#2c3a34;
+  --bg:#121a17; --panel:#1a2420; --ink:#e6eee9; --muted:#9fb0a8; --line:#2c3a34; --faint:#6c7b74;
   --field:#1b2622; --field2:#202d28; --stone:#55645e; --stone-ink:#f0f6f2;
   --good:#8bd04f; --good-hi:#c9f09b; --sick:#c5c64a;
   --c-do:#5aa9e6; --c-delegate:#e0a04a; --c-delete:#ee6a5f; --c-date:#45c0b8;
@@ -91,7 +94,7 @@ canvas{display:block;touch-action:none}
 .task{border-radius:7px;border:1px solid var(--line);font-size:12.5px;line-height:1.25}
 .task summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:22px minmax(0,1fr) auto 10px;gap:7px;align-items:center;padding:3px 6px}
 .task summary::-webkit-details-marker{display:none}
-.task .num{width:22px;height:22px;border-radius:6px;background:var(--stone);color:var(--stone-ink);display:grid;place-items:center;font-family:var(--f-display);font-size:11px;font-weight:700}
+.task .num{width:22px;height:22px;border-radius:6px;background:transparent;border:1px solid var(--faint);color:var(--faint);display:grid;place-items:center;font-family:var(--f-display);font-size:11px;font-weight:700}
 .task .tt{font-weight:600;min-width:0}
 .chev{width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid var(--muted);transition:transform .15s}
 .task[open] .chev{transform:rotate(180deg)}
@@ -100,9 +103,9 @@ canvas{display:block;touch-action:none}
 .attrs{display:flex;flex-direction:column;gap:1px;margin-top:3px;font-size:12px}
 .attrs b{color:var(--muted);font-weight:600}
 .task.ok{background:rgba(63,143,42,.10)}
-.task.ok .num{background:var(--good);color:var(--on)}
+.task.ok .num{background:var(--good);border-color:var(--good);color:var(--on)}
 .task.bad{background:rgba(192,57,47,.10)}
-.task.bad .num{background:var(--c-delete);color:#fff}
+.task.bad .num{background:var(--c-delete);border-color:var(--c-delete);color:#fff}
 .verdict{display:flex;align-items:center;gap:6px;font-size:11px}
 .verdict em{font-style:normal;color:var(--muted)}
 .tag{display:inline-block;padding:1px 8px;border-radius:99px;font-weight:600;font-size:12px;color:var(--c);border:1px solid var(--c)}
@@ -120,6 +123,15 @@ canvas{display:block;touch-action:none}
 .start h1{font-size:28px;line-height:1.2;text-wrap:balance}
 .start p{margin:0}
 .start .lead{font-size:16.5px}
+.sign{flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%;padding-top:20px}
+.sign p{margin:0;font-size:12.5px;line-height:1.5;color:var(--faint);text-align:center}
+.sign span{white-space:nowrap}
+.sign .nm{font-weight:500}
+.sign a{color:inherit;text-decoration:none;border-bottom:1px solid transparent}
+.sign a:hover,.sign a:focus-visible{border-bottom-color:currentColor}
+.start::before{content:"";flex:1}
+.scene::before{content:"";flex:1}
+.scene .sign{padding-bottom:4px}
 .start .goal{font-size:16px}
 .start .fw summary{justify-content:center}
 .start .fw .rules{text-align:left}
@@ -154,6 +166,7 @@ canvas{display:block;touch-action:none}
     </div>
   </details>
   <button class="primary" id="btnStart" type="button">Начать игру</button>
+  <footer class="sign"><p><span class="nm">© 2026 Алексей Игнатенко</span> <span>·</span> <span>Методолог онлайн-обучения</span> <span>·</span> <a href="https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%B8%D0%B3%D0%BD%D0%B0%D1%82%D0%B5%D0%BD%D0%BA%D0%BE-664271263/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p></footer>
 </main>
 
 <main class="app" id="scrGame" hidden>
@@ -226,9 +239,11 @@ canvas{display:block;touch-action:none}
   <h2 id="scTitle"></h2>
   <p id="scText"></p>
   <button class="primary" id="scBtn" type="button"></button>
+  <footer class="sign" id="scSign" hidden><p><span class="nm">© 2026 Алексей Игнатенко</span> <span>·</span> <span>Методолог онлайн-обучения</span> <span>·</span> <a href="https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%B8%D0%B3%D0%BD%D0%B0%D1%82%D0%B5%D0%BD%D0%BA%D0%BE-664271263/" target="_blank" rel="noopener noreferrer">LinkedIn</a></p></footer>
 </main>
 
 <script>
+/* Фреймворк 4D. © 2026 Алексей Игнатенко, методолог онлайн-обучения. Лицензия CC BY 4.0: свободное использование и изменение при обязательном указании автора. https://www.linkedin.com/in/%D0%B0%D0%BB%D0%B5%D0%BA%D1%81%D0%B5%D0%B9-%D0%B8%D0%B3%D0%BD%D0%B0%D1%82%D0%B5%D0%BD%D0%BA%D0%BE-664271263/ */
 (function(){
 'use strict';
 var COLS=14, ROWS=11, GATE_X=COLS-1, GATE_Y0=4, GATE_Y1=6, NEED=7, TOTAL=10, START_LIVES=4;
@@ -1116,6 +1131,7 @@ function openScene(mode){
   sceneMode=mode;sceneT0=performance.now();sceneLast=sceneT0;held=[];spaceHeld=false;parts=[];rockets=[];sparks=[];events=[];nextRocket=0;
   var big=mode==='final';
   if(!big){
+    $('scSign').hidden=true;
     $('scBadge').textContent='Опытный менеджер';
     $('scTitle').textContent='Уровень 3 пройден';
     $('scText').textContent='Поздравляем, вы стали опытным менеджером: вы уверенно распределяете дела по фреймворку 4D.';
@@ -1125,6 +1141,7 @@ function openScene(mode){
     events=[{at:1.5,fn:function(){volley(45);popSound(0);popSound(0.03);fanfareSmall(0.05);crowd(0.3,5,10);}},
             {at:3.3,fn:function(){volley(35);popSound(0);popSound(0.05);}}];
   }else{
+    $('scSign').hidden=false;
     $('scBadge').textContent='Мастер фреймворка 4D';
     $('scTitle').textContent='Поздравляем!';
     $('scText').textContent='Вы научились применять фреймворк 4D к своим задачам. Теперь вы уделяете время действительно важным делам и не тратите его на бесполезные. Вас ждёт успех!';
@@ -1294,11 +1311,29 @@ function draw(now){
   fx=keep;
 
   if(!moved&&state==='run'&&ov.hidden){
-    var msg='Стрелка: один шаг', fs=Math.max(12,CW*0.38);
-    ctx.font=fontB(fs,600);var tw=ctx.measureText(msg).width+CW*0.8;
-    ctx.save();ctx.fillStyle=T['--panel'];ctx.globalAlpha=0.94;rr(W/2-tw/2,H*0.5-CW*0.45,tw,CW*0.9,CW*0.22);ctx.fill();ctx.restore();
-    ctx.fillStyle=T['--ink'];ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(msg,W/2,H*0.5);
+    var k=Math.max(18,CW*0.62), g=Math.max(3,CW*0.08), fs=Math.max(11,CW*0.34), pad=Math.max(10,CW*0.4);
+    var l1='Стрелки двигают менеджера:', l2='одно нажатие, один шаг';
+    ctx.font=fontB(fs,600);
+    var tw=Math.max(ctx.measureText(l1).width,ctx.measureText(l2).width), gw=3*k+2*g, gh=2*k+g, gap=pad*0.9;
+    var cw=pad*2+gw+gap+tw, ch=pad*2+gh, cx0=W/2-cw/2, cy0=H*0.5-ch/2;
+    ctx.save();ctx.shadowColor='rgba(0,0,0,0.18)';ctx.shadowBlur=CW*0.4;ctx.shadowOffsetY=CW*0.08;ctx.fillStyle=T['--panel'];rr(cx0,cy0,cw,ch,CW*0.28);ctx.fill();ctx.restore();
+    ctx.save();ctx.strokeStyle=T['--line'];ctx.lineWidth=1;rr(cx0+0.5,cy0+0.5,cw-1,ch-1,CW*0.28);ctx.stroke();ctx.restore();
+    var gx0=cx0+pad, gy0=cy0+pad, act=Math.floor(now/650)%4;
+    var KP=[[1,0,0,-1],[0,1,-1,0],[1,1,0,1],[2,1,1,0]];
+    for(var q=0;q<4;q++){
+      var kx=gx0+KP[q][0]*(k+g), ky=gy0+KP[q][1]*(k+g), on=(q===act), dy=on?k*0.07:0;
+      ctx.fillStyle=on?T['--c-do']:T['--field2'];rr(kx,ky+dy,k,k,k*0.2);ctx.fill();
+      ctx.strokeStyle=on?T['--c-do']:T['--line'];ctx.lineWidth=1.2;ctx.stroke();
+      var ax=kx+k/2, ay=ky+dy+k/2, r=k*0.22, vx=KP[q][2], vy=KP[q][3];
+      ctx.fillStyle=on?'#ffffff':T['--muted'];ctx.beginPath();
+      ctx.moveTo(ax+vx*r,ay+vy*r);ctx.lineTo(ax-vx*r*0.2+vy*r*0.95-vx*r*0.8*0,ay-vy*r*0.2-vx*r*0.95);
+      ctx.lineTo(ax-vx*r*0.2-vy*r*0.95,ay-vy*r*0.2+vx*r*0.95);ctx.closePath();ctx.fill();
+    }
+    ctx.fillStyle=T['--ink'];ctx.textAlign='left';ctx.textBaseline='middle';
+    ctx.fillText(l1,gx0+gw+gap,H*0.5-fs*0.7);
+    ctx.fillStyle=T['--muted'];ctx.fillText(l2,gx0+gw+gap,H*0.5+fs*0.7);
   }
+
 }
 
 /* ---------- loop ---------- */
