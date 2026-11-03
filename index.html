@@ -114,13 +114,14 @@ canvas{display:block;touch-action:none}
 .rules li span:not(.tag){color:var(--muted);font-size:13.5px}
 .rules .count{margin:12px 0 0;color:var(--muted);font-size:13.5px}
 .fw{background:transparent}
-.fw summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:4px 0;font-weight:400;font-size:13.5px;color:var(--muted)}
+.fw summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:flex-start;gap:10px;padding:4px 0;font-weight:400;font-size:13.5px;color:var(--faint)}
 .fw summary::-webkit-details-marker{display:none}
 .fw[open] .chev{transform:rotate(180deg)}
 .fw .rules{padding:10px 0 0}
 [hidden]{display:none!important}
 .start{max-width:680px;margin:0 auto;min-height:calc(100svh - 52px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;text-align:center}
 .start h1{font-size:28px;line-height:1.2;text-wrap:balance}
+.start h1 .kick{display:block;margin-bottom:10px;font-family:var(--f-body);font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
 .start p{margin:0}
 .start .lead{font-size:16.5px}
 .sign{flex:1;display:flex;align-items:flex-end;justify-content:center;width:100%;padding-top:20px}
@@ -151,10 +152,10 @@ canvas{display:block;touch-action:none}
 
 
 <main class="start" id="scrStart">
-  <h1>Научись выделять главные задачи и распределять второстепенные с помощью фреймворка 4D</h1>
+  <h1><span class="kick">Тренажёр фреймворка 4D</span>Научись выделять главные задачи и распределять второстепенные с помощью фреймворка 4D</h1>
   <p class="goal">Вы руководитель стартапа, у вас есть ассистент, распределите задачи по фреймворку 4D (что выполните сами, что делегируете, что поставите в календарь, что удалите), чтобы заниматься самым важным для результата.</p>
   <details class="fw">
-    <summary><span>Подробнее о фреймворке 4D</span><span class="chev"></span></summary>
+    <summary><span>Подробнее о фреймворке 4D и как играть в тренажёре</span><span class="chev"></span></summary>
     <div class="rules">
       <ul>
             <li><span class="tag" style="--c:var(--c-do)">Do · Сделать</span><span>Польза есть, срок сегодня или завтра, делаете только вы. Если срок завтра, всё бросаете и делаете сегодня. Подойдите к кубику без пробела: менеджер заберёт задачу себе.</span></li>
